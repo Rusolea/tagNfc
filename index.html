@@ -23,20 +23,22 @@
   <p>Cuenta actual: <span id="count">0</span></p>
 
   <script>
+    // Función para actualizar el contador
+    function updateCount() {
+      let count = parseInt(document.getElementById('count').textContent);
+      count += 1;
+      document.getElementById('count').textContent = count;
+    }
+
     // Verificar si el navegador soporta la API de NFC
     if ('NDEFReader' in window) {
       const ndefReader = new NDEFReader();
 
-      ndefReader.onreading = (event) => {
-        // Incrementar el contador
-        let count = parseInt(document.getElementById('count').textContent);
-        count += 1;
-        document.getElementById('count').textContent = count;
-      };
-
-      ndefReader.onrejected = (event) => {
-        console.error('NFC no disponible:', event.message);
-      };
+      // Configurar el lector NFC para escuchar eventos de escritura
+      ndefReader.addEventListener('reading', (event) => {
+        // Actualizar el contador
+        updateCount();
+      });
 
       // Comenzar a escuchar eventos NFC
       ndefReader.scan()

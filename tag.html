@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aplicación web para probar lector de tarjeta NFC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    #count {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Acerca tu tarjeta NFC para sumar 1</h1>
+  <p>Cuenta actual: <span id="count">0</span></p>
+
+  <script>
+    // Verificar si el navegador soporta la API de NFC
+    if ('NDEFReader' in window) {
+      const ndefReader = new NDEFReader();
+
+      ndefReader.onreading = (event) => {
+        // Incrementar el contador
+        let count = parseInt(document.getElementById('count').textContent);
+        count += 1;
+        document.getElementById('count').textContent = count;
+      };
+
+      ndefReader.onrejected = (event) => {
+        console.error('NFC no disponible:', event.message);
+      };
+
+      // Comenzar a escuchar eventos NFC
+      ndefReader.scan()
+        .then(() => {
+          console.log('Escuchando eventos NFC...');
+        })
+        .catch((error) => {
+          console.error('Error al iniciar la lectura NFC:', error);
+        });
+    } else {
+      console.error('Tu navegador no soporta la API de NFC');
+    }
+  </script>
+</body>
+</html>
